@@ -19,11 +19,11 @@ sub EXPORT(|) {
     }
   }
   role SQL::Actions {
-    method statement_control:sym<with>(Mu $/) {
-      my $block := #QAST::Block.new(
+    method statement_control:sym<with>(Mu $/ is rw) {
+      my Mu $block := #QAST::Block.new(
         QAST::Op.new(:op<say>, QAST::SVal.new(:value<Str>));
       #);
-      make $block;
+      make($block);
       #QAST::CompUnit.new(
       #  $block,
       #  :main(QAST::Stmts.new(
