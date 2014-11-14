@@ -8,3 +8,8 @@ with (@a) select * from stuff where id >= ? {
   'hello'.say;
 };
 
+with ([25,50]) select * from stuff where
+                id >= ?
+            AND id <= ? {
+
+}
