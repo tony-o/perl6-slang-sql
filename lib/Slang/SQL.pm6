@@ -1,17 +1,17 @@
 use QAST:from<NQP>;
 
-sub perform(Str $statement, Mu $args?, $cb?) is export {
+sub perform(Str $statement, @args?, $cb?) is export {
   "performing: $statement".say;
-  $args.perl.say;
+  @args.perl.say;
 }
 
 sub EXPORT(|) {
   role SQL::Grammar {
     rule statement_control:sym<with> {
       <sym>
-      #'('
-        <args>
-      #')'
+      '('
+        <arglist>
+      ')'
       <sql>
       <block>
     }
@@ -24,12 +24,15 @@ sub EXPORT(|) {
       nqp::atkey(nqp::findmethod(h, 'hash')(h), k)
     }
     method statement_control:sym<with>(Mu $/ is rw) {
-      my $args  := lk($/, 'args');
+      say('args');
+      my $args  := $/.'!make'(lk($/, 'arglist'));
+      say($args.made.dump());
       my $block := QAST::Op.new(
                      :op<call>, 
                      :name<&perform>, 
                      QAST::SVal.new(:value(lk($/, 'sql'))),
-                     QAST::Var.new(:name($args.Str), :scope<lexical>)
+                     $args.made,
+                     #QAST::Var.new(:name($args.Str), :scope<lexical>)
                    );
       $/.'!make'($block);
     }
