@@ -25,8 +25,7 @@ sub EXPORT(|) {
     }
     method statement_control:sym<with>(Mu $/ is rw) {
       say('args');
-      my $args  := $/.'!make'(lk($/, 'arglist'));
-      say($args.made.dump());
+      my $args  := lk($/, 'arglist');
       my $block := QAST::Op.new(
                      :op<call>, 
                      :name<&perform>, 
