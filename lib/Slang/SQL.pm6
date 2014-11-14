@@ -3,6 +3,7 @@ use QAST:from<NQP>;
 sub perform(Str $statement, @args?, $cb?) is export {
   "performing: $statement".say;
   @args.perl.say;
+  $cb();
 }
 
 sub EXPORT(|) {
@@ -24,13 +25,16 @@ sub EXPORT(|) {
       nqp::atkey(nqp::findmethod(h, 'hash')(h), k)
     }
     method statement_control:sym<with>(Mu $/ is rw) {
-      say('args');
-      my $args  := lk($/, 'arglist');
+      my $sql   := lk($/, 'sql');
+      my $args  := lk($/, 'arglist').ast;
+      my $cb    := lk($/, 'block');
+      $args.name('&infix:<,>');
       my $block := QAST::Op.new(
                      :op<call>, 
                      :name<&perform>, 
-                     QAST::SVal.new(:value(lk($/, 'sql'))),
-                     $args.made,
+                     QAST::SVal.new(:value($sql)),
+                     $args,
+                     $cb.made
                      #QAST::Var.new(:name($args.Str), :scope<lexical>)
                    );
       $/.'!make'($block);
