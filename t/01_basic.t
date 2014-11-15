@@ -20,6 +20,7 @@ for 1..100 {
 
 my $count = 0; 
 with (@a) select * from stuff where id >= ? {
+  say $*STATEMENT if $count == 0;
   $count++;
 };
 
