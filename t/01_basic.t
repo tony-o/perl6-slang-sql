@@ -9,18 +9,26 @@ my $*DB = DBIish.connect(
   :database<sqlite.sqlite3>,
 );
 
-my @a = 5, 50;
+my @a = 5;
 
-with () create table stuff (integer id) { }
+with () drop table stuff { };
+with () create table if not exists stuff (id integer, sid varchar(32)) { };
 
-with (@a) select * from stuff where id >= ? {
-  'hello'.say;
+for 1..100 { 
+  with ($_, "SID: $_") insert into stuff (id, sid) values (?, ?) { };
 }
 
-with (25..50) select * from stuff where
+my $count = 0; 
+with (@a) select * from stuff where id >= ? {
+  $count++;
+};
+
+say $count == 96;
+
+with (25,50) select * from stuff where
                 id >= ?
             AND id <= ? {
 
-}
+};
 
 'done'.say;

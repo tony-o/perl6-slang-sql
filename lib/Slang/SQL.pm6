@@ -2,11 +2,12 @@ use QAST:from<NQP>;
 
 sub perform(Str $statement, @args?, $cb?) is export {
   $*DB.do($statement, @args), return if !defined $cb;
-  $statement.perl.say;
-  my $sth = $*DB.prepare($statement) or die $!;
+  return if !defined $cb;
+  my $*STATEMENT ::= $statement;
+  my $sth = $*DB.prepare($statement);# or die $!;
   $sth.execute(@args);
-  while (my @row = $sth.fetchrow) {
-    $cb(@row);
+  while (my @*ROW = $sth.fetchrow) {
+    $cb();
   }
   $sth.finish;
 }
@@ -40,7 +41,7 @@ sub EXPORT(|) {
                      :name<&perform>, 
                      QAST::SVal.new(:value($sql)),
                      $args,
-                     defined($cb) ?? $cb.made !! Mu
+                     defined($cb) ?? $cb.made !! Nil
                    );
       $/.'!make'($block);
     }
