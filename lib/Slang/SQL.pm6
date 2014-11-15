@@ -1,9 +1,14 @@
 use QAST:from<NQP>;
 
 sub perform(Str $statement, @args?, $cb?) is export {
-  "performing: $statement".say;
-  @args.perl.say;
-  $cb();
+  $*DB.do($statement, @args), return if !defined $cb;
+  $statement.perl.say;
+  my $sth = $*DB.prepare($statement) or die $!;
+  $sth.execute(@args);
+  while (my @row = $sth.fetchrow) {
+    $cb(@row);
+  }
+  $sth.finish;
 }
 
 sub EXPORT(|) {
@@ -14,7 +19,7 @@ sub EXPORT(|) {
         <arglist>
       ')'
       <sql>
-      <block>
+      <block> 
     }
     token sql {
       .*? <?before '{'>
@@ -29,13 +34,13 @@ sub EXPORT(|) {
       my $args  := lk($/, 'arglist').ast;
       my $cb    := lk($/, 'block');
       $args.name('&infix:<,>');
+
       my $block := QAST::Op.new(
                      :op<call>, 
                      :name<&perform>, 
                      QAST::SVal.new(:value($sql)),
                      $args,
-                     $cb.made
-                     #QAST::Var.new(:name($args.Str), :scope<lexical>)
+                     defined($cb) ?? $cb.made !! Mu
                    );
       $/.'!make'($block);
     }
