@@ -9,27 +9,31 @@ my $*DB = DBIish.connect(
   :database<sqlite.sqlite3>,
 );
 
-my @a = 5;
-
-with () drop table stuff { };
-with () create table if not exists stuff (id integer, sid varchar(32)) { };
-
-for 1..100 { 
-  with ($_, "SID: $_") insert into stuff (id, sid) values (?, ?) { };
-}
-
+my @a     = 5;
 my $count = 0; 
-with (@a) select * from stuff where id >= ? {
-  say $*STATEMENT if $count == 0;
-  $count++;
+
+exec drop table stuff;
+exec create table if not exists stuff (id integer, sid varchar(32));
+for 1..100 {
+  exec insert into stuff (id, sid) values (?, ?); with ($_);
+}
+exec select * from stuff where id >= ?; with (@a) do {
+  say $*STATEMENT if $count++ == 0;
+}
+exec select * from stuff where
+           id >= ?
+       AND id <= ?; with (25,50) do {
+
+};
+
+exec select * from stuff where sid like '%;%'; do {
+
 };
 
 say $count == 96;
 
-with (25,50) select * from stuff where
-                id >= ?
-            AND id <= ? {
-
-};
+#with () select * from stuff where sid like '%{%' {
+#  'here'.say;
+#};
 
 'done'.say;
