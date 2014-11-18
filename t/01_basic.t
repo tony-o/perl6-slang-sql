@@ -32,8 +32,4 @@ exec select * from stuff where sid like '%;%'; do {
 
 say $count == 96;
 
-#with () select * from stuff where sid like '%{%' {
-#  'here'.say;
-#};
-
 'done'.say;

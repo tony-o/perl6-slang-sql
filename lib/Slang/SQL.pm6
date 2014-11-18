@@ -32,11 +32,7 @@ sub EXPORT(|) {
       ]
     }
     token sql {
-      .+? <before <eosql>> 
-    }
-    token eosql {
-      ';' 
-      [ 'with' || 'do' || $$ ]
+      [ \'.*?\' || \".*?\" || .]*? )> <before ';'>
     }
   }
   role SQL::Actions {
@@ -45,21 +41,21 @@ sub EXPORT(|) {
     }
     method statement_control:sym<exec>(Mu $/ is rw) {
       my $sql   := lk($/, 'sql');
-      #my $args  := lk($/, 'arglist').ast;
-      say('SQL');
-      say($sql.Str);
-      say('/SQL');
-      #say(lk($/, 'arglist').Str);
-      #my $cb    := lk($/, 'blockoid');
-      #$args.name('&infix:<,>');
-      #my $block := QAST::Op.new(
-      #               :op<call>, 
-      #               :name<&perform>, 
-      #               QAST::SVal.new(:value($sql)),
-      #               $args,
-      #               defined($cb) ?? $cb.made !! QAST::IVal.new(:value(0))
-      #             );
-      #$/.'!make'($block);
+      my $args  := lk($/, 'arglist');
+      my $cb    := lk($/, 'block');
+      if $args.WHAT !~~ Mu {
+        $args := $args.ast;
+        $args.name('&infix:<,>');
+      }
+      my $args2 := Array; #QAST::Var.new(:name<Nil>, :scope<lexical>);
+      my $block := QAST::Op.new(
+                     :op<call>, 
+                     :name<&perform>, 
+                     QAST::SVal.new(:value($sql)),
+                     $args2, #$args.WHAT !~~ Mu ?? $args !! $args2,
+                     #$cb
+                   );
+      $/.'!make'($block);
     }
   }
   nqp::bindkey(%*LANG, 'MAIN', %*LANG<MAIN>.HOW.mixin(%*LANG<MAIN>, SQL::Grammar));
