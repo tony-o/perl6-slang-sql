@@ -1,15 +1,16 @@
 use QAST:from<NQP>;
-
-sub sql(Str $statement, @args?, $cb?) is export {
-  $*DB.do($statement, @args), return if !defined $cb;
-  my $*STATEMENT = $statement;
-  my $sth = $*DB.prepare($statement);
-  $sth.execute(@args);
-  while (my $ROW = $sth.fetchrow_hashref) {
-    $cb($ROW);
+module Slang::SQL::sql {
+  our sub sql(Str $statement, @args?, $cb?) {
+    $*DB.do($statement, @args), return if !defined $cb;
+    my $*STATEMENT = $statement;
+    my $sth = $*DB.prepare($statement);
+    $sth.execute(@args);
+    while (my $ROW = $sth.fetchrow_hashref) {
+      $cb($ROW);
+    }
+    $sth.finish;
   }
-  $sth.finish;
-}
+};
 
 sub EXPORT(|) {
   role SQL::Grammar {
@@ -60,7 +61,7 @@ sub EXPORT(|) {
       }
       my $block := QAST::Op.new(
                      :op<call>, 
-                     :name<&sql>, 
+                     :name<&Slang::SQL::sql>, 
                      QAST::SVal.new(:value($sql.Str)),
                      $args, 
                      $cb
