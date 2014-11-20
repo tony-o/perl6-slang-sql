@@ -2,12 +2,13 @@ use QAST:from<NQP>;
 
 sub perform(Str $statement, @args?, $cb?) is export {
   $*DB.do($statement, @args), return if !defined $cb;
-  return if !defined $cb;
-  my $*STATEMENT ::= $statement;
-  my $sth = $*DB.prepare($statement);# or die $!;
+  my $*STATEMENT = $statement;
+  my $sth = $*DB.prepare($statement);
   $sth.execute(@args);
-  while (my @*ROW = $sth.fetchrow) {
-    $cb();
+  while (my $ROW = $sth.fetchrow_hashref) {
+    try {
+      $cb($ROW);
+    };
   }
   $sth.finish;
 }
@@ -27,8 +28,9 @@ sub EXPORT(|) {
       ]
       [ 
         | ''
-        | 'do'
-          <block>
+        | 
+          'do'
+          <pblock>
       ]
     }
     token sql {
@@ -42,18 +44,28 @@ sub EXPORT(|) {
     method statement_control:sym<exec>(Mu $/ is rw) {
       my $sql   := lk($/, 'sql');
       my $args  := lk($/, 'arglist');
-      my $cb    := lk($/, 'block');
+      my $cb    := lk($/, 'pblock');
       if $args.WHAT !~~ Mu {
         $args := $args.ast;
         $args.name('&infix:<,>');
+      } else {
+        $args := QAST::Op.new(
+                   :op<call>,
+                   :name('&infix:<,>'),
+                 );
       }
-      my $args2 := Array; #QAST::Var.new(:name<Nil>, :scope<lexical>);
+      say($sql.Str);
+      if Mu ~~ $cb.WHAT ~~ Mu {
+        $cb := QAST::WVal.new(:value<PBlock>);
+      } else {
+        $cb := $cb.made;
+      }
       my $block := QAST::Op.new(
                      :op<call>, 
                      :name<&perform>, 
-                     QAST::SVal.new(:value($sql)),
-                     $args2, #$args.WHAT !~~ Mu ?? $args !! $args2,
-                     #$cb
+                     QAST::SVal.new(:value($sql.Str)),
+                     $args, #$args.WHAT !~~ Mu ?? $args !! $args2,
+                     $cb
                    );
       $/.'!make'($block);
     }
