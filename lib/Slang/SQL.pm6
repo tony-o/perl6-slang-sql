@@ -1,21 +1,19 @@
 use QAST:from<NQP>;
 
-sub perform(Str $statement, @args?, $cb?) is export {
+sub sql(Str $statement, @args?, $cb?) is export {
   $*DB.do($statement, @args), return if !defined $cb;
   my $*STATEMENT = $statement;
   my $sth = $*DB.prepare($statement);
   $sth.execute(@args);
   while (my $ROW = $sth.fetchrow_hashref) {
-    try {
-      $cb($ROW);
-    };
+    $cb($ROW);
   }
   $sth.finish;
 }
 
 sub EXPORT(|) {
   role SQL::Grammar {
-    rule statement_control:sym<exec> {
+    rule statement_control:sym<sql> {
       <sym>  
       <sql>
       [
@@ -28,7 +26,7 @@ sub EXPORT(|) {
       ]
       [ 
         | ''
-        | 
+        | ';'?
           'do'
           <pblock>
       ]
@@ -41,7 +39,8 @@ sub EXPORT(|) {
     sub lk(Mu \h, \k) {
       nqp::atkey(nqp::findmethod(h, 'hash')(h), k)
     }
-    method statement_control:sym<exec>(Mu $/ is rw) {
+
+    method statement_control:sym<sql>(Mu $/ is rw) {
       my $sql   := lk($/, 'sql');
       my $args  := lk($/, 'arglist');
       my $cb    := lk($/, 'pblock');
@@ -61,7 +60,7 @@ sub EXPORT(|) {
       }
       my $block := QAST::Op.new(
                      :op<call>, 
-                     :name<&perform>, 
+                     :name<&sql>, 
                      QAST::SVal.new(:value($sql.Str)),
                      $args, 
                      $cb
