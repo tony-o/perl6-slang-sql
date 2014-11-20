@@ -1,6 +1,6 @@
 use QAST:from<NQP>;
 module Slang::SQL { 
-  our sub sql(Str $statement, @args?, $cb?) {
+  our sub sql(Str $statement, @args, $cb) {
     $*DB.do($statement, @args), return if !defined $cb;
     my $*STATEMENT = $statement;
     my $sth = $*DB.prepare($statement);
