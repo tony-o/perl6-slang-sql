@@ -54,8 +54,7 @@ sub EXPORT(|) {
                    :name('&infix:<,>'),
                  );
       }
-      say($sql.Str);
-      if Mu ~~ $cb.WHAT ~~ Mu {
+      if Mu ~~ $cb.WHAT {
         $cb := QAST::WVal.new(:value<PBlock>);
       } else {
         $cb := $cb.made;
@@ -64,7 +63,7 @@ sub EXPORT(|) {
                      :op<call>, 
                      :name<&perform>, 
                      QAST::SVal.new(:value($sql.Str)),
-                     $args, #$args.WHAT !~~ Mu ?? $args !! $args2,
+                     $args, 
                      $cb
                    );
       $/.'!make'($block);

@@ -31,8 +31,8 @@ exec select * from stuff where
   $ROW.perl.say;
 };
 
-exec select * from stuff where sid like '%;%'; do -> $ROW {
-  $ROW.perl.say;
+exec select * from stuff where sid like '%;%'; do -> $a {
+  $a.perl.say;
 };
 
 say $count == 96;
