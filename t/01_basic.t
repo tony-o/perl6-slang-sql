@@ -5,8 +5,6 @@ use Slang::SQL;
 use DBIish;
 use Test;
 
-&Slang::SQL::sql('dead');
-exit;
 my $optout;
 
 my $*DB = DBIish.connect(
