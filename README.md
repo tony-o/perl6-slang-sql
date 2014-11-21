@@ -6,6 +6,7 @@ Quick little SQL SLang for perl6 to embed SQL into the language.  Design goals w
 * not have to quote your sql 
 * treat SQL statements that return something as loops
 * have optional parameters/callback
+* nested SQLs
 
 What it doesn't do [yet]
 
@@ -54,3 +55,6 @@ id      sid
 5       TMRDZOKJQNWFGBUP
 ```
 
+##Mo Better Examples
+
+Check out ```t/01_basic.t```
