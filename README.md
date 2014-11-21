@@ -7,6 +7,7 @@ Quick little SQL SLang for perl6 to embed SQL into the language.  Design goals w
 * treat SQL statements that return something as loops
 * have optional parameters/callback
 * nested SQLs
+* loop control ```last```, ```next``` ..
 
 What it doesn't do [yet]
 
@@ -55,11 +56,11 @@ id      sid
 5       TMRDZOKJQNWFGBUP
 ```
 
-##Equivalent Code Using Only DBIish
+##Equivalent Code Slang vs. Only DBIish
 
 ###Example Above
 
-####After
+####Slang::SQL
 
 ```perl6
 use Slang::SQL;
@@ -86,7 +87,7 @@ sql select * from stuff order by id asc; do -> $row {
 };
 ```
 
-####Before
+####DBIish
 
 ```perl6
 use DBIish;
@@ -119,7 +120,7 @@ $stmt.finish;
 
 ###Nested SQL
 
-####After
+####Slang::SQL
 
 ```perl6
 use Slang::SQL;
@@ -134,7 +135,7 @@ sql select * from stuff order by id asc; do -> $row1 {
 };
 ```
 
-####Before
+####DBIish
 
 ```perl6
 use DBIish;
