@@ -37,9 +37,9 @@ for 0..5 {
 }
 
 sql select * from stuff order by id asc; do -> $row {
- $*STATEMENT.say if $row<id> == 0;
- "id\tsid".say   if $row<id> == 0;
- "{$row<id>}\t{$row<sid>}".say;
+  $*STATEMENT.say if $row<id> == 0;
+  "id\tsid".say   if $row<id> == 0;
+  "{$row<id>}\t{$row<sid>}".say;
 };
 ```
 
@@ -81,9 +81,9 @@ for 0..5 {
 }
 
 sql select * from stuff order by id asc; do -> $row {
- $*STATEMENT.say if $row<id> == 0;
- "id\tsid".say   if $row<id> == 0;
- "{$row<id>}\t{$row<sid>}".say;
+  $*STATEMENT.say if $row<id> == 0;
+  "id\tsid".say   if $row<id> == 0;
+  "{$row<id>}\t{$row<sid>}".say;
 };
 ```
 
