@@ -1,0 +1,10 @@
+{
+  "name" : "Slang::SQL",
+  "version" : "0.1",
+  "description" : "A slang to make SQL a more integrated part of the language"
+  "depends" : ["DBIish"],
+  "provides" : {
+      "Benchmark": "lib/Slang/SQL.pm6"
+  },
+  "source-url" : "git://github.com/tony-o/perl6-slang-sql.git"
+}

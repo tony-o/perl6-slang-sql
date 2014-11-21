@@ -20,7 +20,7 @@ if $optout == 1 {
   exit;
 }
 
-plan 17;
+plan 18;
 
 my @a     = 5;
 my $count = 0; 
@@ -50,6 +50,14 @@ sql select * from stuff where id >= ?; with (@a) do -> $row {
   ok 'select * from stuff where id >= ?' eq $*STATEMENT, '$*STATEMENT set correctly' if $count++ == 0;
 };
 ok $count == 96, 'inserted record count is good';
+
+$count = 0;
+sql select * from stuff; do -> $row {
+  $count++;
+  last;
+}
+ok $count == 1, 'testing \'last\' keyword in sql loop';
+
 
 my $truf = True;
 my $s1   = '';
