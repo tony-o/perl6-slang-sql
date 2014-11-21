@@ -1,6 +1,7 @@
 use QAST:from<NQP>;
 
-sub sql(Str $statement, @args?, $cb?) is export {
+sub Slang::SQL::sql(Str $statement, @args?, $cb?) is export {
+  die '$*DB must be defined' if !defined $*DB;
   $*DB.do($statement, @args), return if !defined $cb;
   my $*STATEMENT = $statement;
   my $sth = $*DB.prepare($statement);
@@ -58,9 +59,10 @@ sub EXPORT(|) {
       } else {
         $cb := $cb.made;
       }
+
       my $block := QAST::Op.new(
                      :op<call>, 
-                     :name<&sql>, 
+                     :name<&Slang::SQL::sql>, 
                      QAST::SVal.new(:value($sql.Str)),
                      $args, 
                      $cb
