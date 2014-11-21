@@ -4,7 +4,7 @@
   "description" : "A slang to make SQL a more integrated part of the language"
   "depends" : ["DBIish"],
   "provides" : {
-      "Benchmark": "lib/Slang/SQL.pm6"
+      "Slang::SQL": "lib/Slang/SQL.pm6"
   },
   "source-url" : "git://github.com/tony-o/perl6-slang-sql.git"
 }
