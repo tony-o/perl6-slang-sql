@@ -55,6 +55,37 @@ id      sid
 5       TMRDZOKJQNWFGBUP
 ```
 
+##Equivalent Code Using Only DBIish
+
+```perl6
+use DBIish;
+
+my $DB = DBIish.connect('SQLite', :database<sqlite.sqlite3>);
+
+$db.do('drop table if exists stuff;');
+
+$db.do('create table if not exists stuff (
+          id  integer,
+          sid varchar(32)
+        )');
+
+for 0..5 {
+  $db.do('insert into stuff (id, sid) 
+            values(?,?);', ($_, ('A'..'Z').pick(16).join('')));
+}
+
+my $sql  = 'select * from stuff order by id asc';
+my $stmt = $db.prepare($sql);
+
+$stmt.execute();
+while (my $row = $stmt.fetchrow_hashref) {
+  $sql.say if $row<id> == 0;
+  "id\tsid".say; if $row<id> == 0;
+  "{$row<id>}\t{$row<sid>}".say;
+}
+$stmt.finish;
+```
+
 ##Mo Better Examples
 
 Check out ```t/01_basic.t```
