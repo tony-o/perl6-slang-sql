@@ -1,7 +1,7 @@
 {
   "name" : "Slang::SQL",
   "version" : "0.1",
-  "description" : "A slang to make SQL a more integrated part of the language"
+  "description" : "A slang to make SQL a more integrated part of the language",
   "depends" : ["DBIish"],
   "provides" : {
       "Slang::SQL": "lib/Slang/SQL.pm6"
