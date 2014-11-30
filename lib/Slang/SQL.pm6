@@ -18,18 +18,18 @@ sub EXPORT(|) {
       <sym>  
       <sql>
       [
-        | ''
         | ';'
           'with'
           '('
             <arglist>
           ')'
+        | ''
       ]
       [ 
-        | ''
-        | ';'?
+        | ';'? 
           'do'
           <pblock>
+        | ''
       ]
     }
     token sql {
