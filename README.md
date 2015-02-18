@@ -31,14 +31,13 @@ sql create table if not exists stuff (
       sid varchar(32)
     );
 
-for 0..5 {
+for ^5 {
   sql insert into stuff (id, sid) 
-    values (?, ?); with ($_, ('A'..'Z').pick(16).join(''));
+    values (?, ?); with ($_, ('A'..'Z').pick(16).join);
 }
 
 sql select * from stuff order by id asc; do -> $row {
-  $*STATEMENT.say if $row<id> == 0;
-  "id\tsid".say   if $row<id> == 0;
+  FIRST "{$*STATEMENT}id\tsid".say;
   "{$row<id>}\t{$row<sid>}".say;
 };
 ```
@@ -53,7 +52,6 @@ id      sid
 2       MIQVEDTNXBWGHZFL
 3       KFNJWXLSRQEUGBZA
 4       VDOMIUYCWQZHGRPF
-5       TMRDZOKJQNWFGBUP
 ```
 
 ##Equivalent Code Slang vs. Only DBIish
@@ -75,14 +73,13 @@ sql create table if not exists stuff (
       sid varchar(32)
     );
 
-for 0..5 {
+for ^5 {
   sql insert into stuff (id, sid) 
-    values (?, ?); with ($_, ('A'..'Z').pick(16).join(''));
+    values (?, ?); with ($_, ('A'..'Z').pick(16).join);
 }
 
 sql select * from stuff order by id asc; do -> $row {
-  $*STATEMENT.say if $row<id> == 0;
-  "id\tsid".say   if $row<id> == 0;
+  FIRST "{$*STATEMENT}id\tsid".say;
   "{$row<id>}\t{$row<sid>}".say;
 };
 ```
@@ -101,9 +98,9 @@ $db.do('create table if not exists stuff (
           sid varchar(32)
         )');
 
-for 0..5 {
+for ^5 {
   $db.do('insert into stuff (id, sid) 
-            values(?,?);', ($_, ('A'..'Z').pick(16).join('')));
+            values(?,?);', ($_, ('A'..'Z').pick(16).join));
 }
 
 my $sql  = 'select * from stuff order by id asc';
@@ -111,8 +108,7 @@ my $stmt = $db.prepare($sql);
 
 $stmt.execute();
 while (my $row = $stmt.fetchrow_hashref) {
-  $sql.say if $row<id> == 0;
-  "id\tsid".say; if $row<id> == 0;
+  FIRST "{$sql}id\tsid".say;
   "{$row<id>}\t{$row<sid>}".say;
 }
 $stmt.finish;
