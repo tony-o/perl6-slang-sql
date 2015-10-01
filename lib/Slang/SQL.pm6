@@ -1,3 +1,4 @@
+use nqp;
 use QAST:from<NQP>;
 
 sub Slang::SQL::sql(Str $statement, @args?, $cb?) is export {
