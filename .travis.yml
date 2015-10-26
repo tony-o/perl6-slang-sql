@@ -1,0 +1,11 @@
+branches:
+  except:
+    - gh-pages
+language: perl6
+sudo: false
+perl6:
+  - latest
+#  - 2015.09
+install:
+  - rakudobrew build-panda
+  - panda installdeps .
