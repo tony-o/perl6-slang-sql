@@ -1,4 +1,4 @@
-#Slang::SQL
+# Slang::SQL
 
 Quick little SQL SLang for perl6 to embed SQL into the language.  Design goals were:
 
@@ -16,7 +16,7 @@ What it doesn't do [yet]
 * handle your DB connection (currently depends on DBIish)
 * auto parameters based on SQL (PerlJam's suggestion, it's a cool idea)
 
-#Use
+# Use
 
 ```perl6
 use Slang::SQL;
@@ -54,11 +54,11 @@ id      sid
 4       VDOMIUYCWQZHGRPF
 ```
 
-##Equivalent Code Slang vs. Only DBIish
+## Equivalent Code Slang vs. Only DBIish
 
-###Example Above
+### Example Above
 
-####Slang::SQL
+#### Slang::SQL
 
 ```perl6
 use Slang::SQL;
@@ -84,7 +84,7 @@ sql select * from stuff order by id asc; do -> $row {
 };
 ```
 
-####DBIish
+#### DBIish
 
 ```perl6
 use DBIish;
@@ -114,9 +114,9 @@ while (my $row = $stmt.fetchrow_hashref) {
 $stmt.finish;
 ```
 
-###Nested SQL
+### Nested SQL
 
-####Slang::SQL
+#### Slang::SQL
 
 ```perl6
 use Slang::SQL;
@@ -131,7 +131,7 @@ sql select * from stuff order by id asc; do -> $row1 {
 };
 ```
 
-####DBIish
+#### DBIish
 
 ```perl6
 use DBIish;
@@ -153,6 +153,6 @@ while (my $row1 = $stm1.fetchrow_hashref) {
 
 ```
 
-##Mo Better Examples
+## Mo Better Examples
 
 Check out ```t/01_basic.t```
