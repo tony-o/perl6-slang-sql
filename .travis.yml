@@ -8,4 +8,4 @@ perl6:
 #  - 2015.09
 install:
   - rakudobrew build-zef
-  - zef --depends install 
+  - zef --deps-only install .
