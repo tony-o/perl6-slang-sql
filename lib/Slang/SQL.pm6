@@ -68,12 +68,16 @@ sub EXPORT(|) {
                      $args, 
                      $cb
                    );
-      $/.'!make'($block);
+      $/.'make'($block);
     }
   }
-  nqp::bindkey(%*LANG, 'MAIN', %*LANG<MAIN>.HOW.mixin(%*LANG<MAIN>, SQL::Grammar));
-  nqp::bindkey(%*LANG, 'MAIN-actions', %*LANG<MAIN-actions>.HOW.mixin(%*LANG<MAIN-actions>, SQL::Actions));
+
+  $ = $*LANG.define_slang(
+    'MAIN',
+    $*LANG.slang_grammar('MAIN').^mixin(SQL::Grammar),
+    $*LANG.actions.^mixin(SQL::Actions)
+  );
   {}
 }
 
-
+# vi:syntax=perl6
