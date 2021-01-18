@@ -7,6 +7,6 @@
   "provides" : {
       "Slang::SQL": "lib/Slang/SQL.pm6"
   },
-  "auth": "github:tony-o",
+  "auth": "zef:tony-o",
   "source-url" : "git://github.com/tony-o/perl6-slang-sql.git"
 }
