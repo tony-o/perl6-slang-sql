@@ -1,1 +1,3 @@
 sqlite.sqlite3
+sdist/
+.precomp/
