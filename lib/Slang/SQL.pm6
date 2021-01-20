@@ -7,7 +7,7 @@ sub Slang::SQL::sql(Str $statement, @args?, $cb?) is export {
   my $*STATEMENT = $statement;
   my $sth = $*DB.prepare($statement);
   $sth.execute(@args);
-  while (my $ROW = $sth.fetchrow_hashref) {
+  while (my $ROW = $sth.row(:hash)) {
     $cb($ROW);
   }
   $sth.finish;

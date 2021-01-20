@@ -107,7 +107,7 @@ my $sql  = 'select * from stuff order by id asc';
 my $stmt = $db.prepare($sql);
 
 $stmt.execute();
-while (my $row = $stmt.fetchrow_hashref) {
+while (my $row = $stmt.row(:hash)) {
   FIRST "{$sql}id\tsid".say;
   "{$row<id>}\t{$row<sid>}".say;
 }
@@ -144,9 +144,9 @@ my $stm1 = $db.prepare($sql1);
 my $stm2 = $db.prepare($sql2);
 
 $stm1.execute();
-while (my $row1 = $stm1.fetchrow_hashref) {
+while (my $row1 = $stm1.row(:hash)) {
   $stm2.execute($row1<id>);
-  while (my $row2 = $stm2.fetchrow_hashref) {
+  while (my $row2 = $stm2.row(:hash)) {
     #do something here
   }
 }
