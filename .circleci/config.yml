@@ -12,7 +12,7 @@ jobs:
           name: install build deps
           command: |
               apt update
-              apt install -y git
+              apt install -y git build-essential
               zef install --deps-only .
       - run:
           name: test 
