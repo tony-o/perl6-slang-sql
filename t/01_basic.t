@@ -13,7 +13,7 @@ my $*DB = DBIish.connect(
   :database<sqlite.sqlite3>,
 ) or $optout = 1;
 
-if $optout == 1 {
+if $optout {
   plan 2;
   ok True, 'Able to \'use\'';
   ok True, 'Please install SQLite drivers for full test';
