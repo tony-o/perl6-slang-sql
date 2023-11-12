@@ -3,7 +3,7 @@
   "name" : "Slang::SQL",
   "version" : "0.1.5",
   "description" : "A slang to make SQL a more integrated part of the language",
-  "depends" : ["DBIish"],
+  "depends" : ["DBIish:auth<zef:raku-community-modules>"],
   "provides" : {
       "Slang::SQL": "lib/Slang/SQL.pm6"
   },
